@@ -10,6 +10,9 @@ import cors from "cors";
 import { connectToSocket } from "./controllers/socketManager.js";
 import userRoutes from "./routes/users.routes.js";
 import { Server } from "socket.io";
+import path from "path";
+
+
 
 const app = express();
 const server = createServer(app);
@@ -21,6 +24,23 @@ app.use(express.json({ limit: "40kb" }));
 app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
 app.use("/api/v1/users", userRoutes);
+
+app.use(express.static(path.join(process.cwd(), "build"), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith(".js")) {
+      res.setHeader("Content-Type", "application/javascript");
+    }
+  }
+}));
+
+// Fallback for React Router
+app.get("*", (req, res) => {
+  res.sendFile(path.join(process.cwd(), "build", "index.html"));
+});
+
+
+
+
 
 const start = async () => {
     try {
