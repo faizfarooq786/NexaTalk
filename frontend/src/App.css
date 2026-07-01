@@ -1,96 +1,721 @@
+/* ============================================================
+   NexaTalk — Design System
+   ============================================================ */
+:root {
+  --bg-900: #0a0a14;
+  --bg-800: #11111f;
+  --bg-700: #1a1a2e;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --text: #f4f4f8;
+  --text-dim: #a9abc4;
+  --text-faint: #6e7191;
+
+  --accent: #ff9839;
+  --accent-600: #f07d12;
+  --accent-glow: rgba(255, 152, 57, 0.45);
+  --violet: #7c5cff;
+  --violet-glow: rgba(124, 92, 255, 0.35);
+
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 10px 40px -8px var(--accent-glow);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ============================================================
+   Shared animated gradient backdrop
+   ============================================================ */
+.nx-backdrop {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(1100px 600px at 8% -8%, rgba(124, 92, 255, 0.22), transparent 60%),
+    radial-gradient(900px 600px at 100% 0%, rgba(255, 152, 57, 0.18), transparent 55%),
+    radial-gradient(800px 800px at 50% 120%, rgba(124, 92, 255, 0.16), transparent 60%),
+    linear-gradient(160deg, var(--bg-900), var(--bg-800) 55%, var(--bg-700));
+  color: var(--text);
+}
+
+.nx-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 75%);
+          mask-image: radial-gradient(circle at 50% 30%, #000 0%, transparent 75%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   Landing Page
+   ============================================================ */
 .landingPageContainer {
-  width: 100vw;
-  height: 100vh;
-  background: url("/public/background.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: white;
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(1100px 600px at 8% -8%, rgba(124, 92, 255, 0.22), transparent 60%),
+    radial-gradient(900px 600px at 100% 0%, rgba(255, 152, 57, 0.18), transparent 55%),
+    radial-gradient(800px 800px at 50% 120%, rgba(124, 92, 255, 0.16), transparent 60%),
+    linear-gradient(160deg, var(--bg-900), var(--bg-800) 55%, var(--bg-700));
+  color: var(--text);
+}
+
+.landingPageContainer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(circle at 70% 20%, #000 0%, transparent 70%);
+          mask-image: radial-gradient(circle at 70% 20%, #000 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .landingPageContainer nav {
-  padding-inline: 1.2rem;
-  padding-block: 1.6rem;
+  position: relative;
+  z-index: 2;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1.4rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
 }
 
-.landingPageContainer nav h2 {
-  font-size: 1.8rem;
-  font-weight: 500;
+.landingPageContainer nav .navHeader h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #fff, var(--accent));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .landingPageContainer nav .navlist {
   display: flex;
-  gap: 1.6rem;
-  cursor: pointer;
+  gap: 0.6rem;
+  align-items: center;
+}
 
+.landingPageContainer nav .navlist p {
+  cursor: pointer;
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.landingPageContainer nav .navlist p:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.landingPageContainer nav .navlist div[role='button'] {
+  cursor: pointer;
+  padding: 0.55rem 1.4rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-600));
+  box-shadow: var(--shadow-glow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.landingPageContainer nav .navlist div[role='button']:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 44px -8px var(--accent-glow);
+}
+
+.landingPageContainer nav .navlist div[role='button'] p {
+  color: #fff;
+  font-weight: 600;
+  padding: 0;
+}
+
+.landingPageContainer nav .navlist div[role='button'] p:hover {
+  background: none;
 }
 
 .landingMainContainer {
+  position: relative;
+  z-index: 2;
+  max-width: 1240px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  padding-inline: 3rem;
-  height: 80vh;
   align-items: center;
+  gap: 2rem;
+  padding: 2rem 2rem 4rem;
+  min-height: calc(100vh - 90px);
 }
 
-.landingMainContainer>div:nth-child(1) {
-  font-size: 2.2rem;
+.landingMainContainer > div:nth-child(1) {
+  flex: 1;
+  max-width: 580px;
+  animation: nx-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.landingMainContainer>div:nth-child(1) div[role='button'] {
-  background: #D97500;
+.nx-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+}
+
+.nx-badge span.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #36d399;
+  box-shadow: 0 0 0 3px rgba(54, 211, 153, 0.2);
+}
+
+.landingMainContainer > div:nth-child(1) h1 {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.2rem;
+}
+
+.landingMainContainer > div:nth-child(1) h1 span {
+  background: linear-gradient(120deg, var(--accent), #ffce8a);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landingMainContainer > div:nth-child(1) > p {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  max-width: 460px;
+  margin-bottom: 2rem;
+}
+
+.landingMainContainer > div:nth-child(1) div[role='button'] {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent-600));
   width: fit-content;
-  padding: 1rem;
-  border-radius: 20px;
-  margin-top: 1.9rem;
+  padding: 0.95rem 2.2rem;
+  border-radius: 999px;
+  box-shadow: var(--shadow-glow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.landingMainContainer>div:nth-child(1) div[role='button'] a {
+.landingMainContainer > div:nth-child(1) div[role='button']:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 50px -8px var(--accent-glow);
+}
+
+.landingMainContainer > div:nth-child(1) div[role='button'] a {
   text-decoration: none;
-  color: white;
-  font-size: 1.7rem;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
-.landingMainContainer>div:nth-child(2) img {
-  height: 70vh;
+.nx-stats {
+  display: flex;
+  gap: 2.2rem;
+  margin-top: 2.6rem;
+}
+
+.nx-stats .nx-stat strong {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.nx-stats .nx-stat span {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+}
+
+.landingMainContainer > div:nth-child(2) {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  animation: nx-rise 0.9s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.landingMainContainer > div:nth-child(2)::before {
+  content: "";
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow), transparent 65%);
+  filter: blur(40px);
+  z-index: -1;
+}
+
+.landingMainContainer > div:nth-child(2) img {
+  max-height: 72vh;
   width: auto;
+  max-width: 100%;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55));
+  animation: nx-float 6s ease-in-out infinite;
+}
+
+@keyframes nx-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+@keyframes nx-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Home / Dashboard
+   ============================================================ */
+.nx-home {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(1000px 600px at 12% -10%, rgba(124, 92, 255, 0.20), transparent 60%),
+    radial-gradient(900px 600px at 100% 0%, rgba(255, 152, 57, 0.16), transparent 55%),
+    linear-gradient(160deg, var(--bg-900), var(--bg-800) 60%, var(--bg-700));
+  color: var(--text);
 }
 
 .navBar {
+  position: relative;
+  z-index: 2;
+  max-width: 1240px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-inline: 20px;
-  text-align: center;
-
-}
-.meetContainer {
-  display: flex;
-  padding-inline: 20px;
-  height: 80vh;
-  gap: 10vw;
-  justify-content: center;
+  padding: 1.1rem 2rem;
+  border-bottom: 1px solid var(--border);
 }
 
+.navBar h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
 
+.navBar h2 span {
+  color: var(--accent);
+}
 
-.leftPanel {
-  height: 100%;
+.nx-nav-actions {
   display: flex;
   align-items: center;
+  gap: 0.4rem;
+}
 
+.nx-nav-actions .nx-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  color: var(--text-dim) !important;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nx-nav-actions .nx-icon-btn:hover {
+  background: var(--surface);
+  color: var(--text) !important;
+}
+
+.meetContainer {
+  position: relative;
+  z-index: 2;
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  padding: 3rem 2rem;
+  min-height: calc(100vh - 76px);
+  justify-content: space-between;
+}
+
+.leftPanel {
+  flex: 1;
+  max-width: 560px;
+  animation: nx-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.leftPanel h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.8rem;
+}
+
+.leftPanel .nx-sub {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.nx-join-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-lg);
+}
+
+.nx-join-card .nx-join-label {
+  font-size: 0.85rem;
+  color: var(--text-faint);
+  margin-bottom: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.nx-join-row {
+  display: flex;
+  gap: 0.8rem;
+  align-items: stretch;
 }
 
 .rightPanel {
+  flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: nx-rise 0.8s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.rightPanel::before {
+  content: "";
+  position: absolute;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--violet-glow), transparent 65%);
+  filter: blur(50px);
+  z-index: -1;
 }
 
 .rightPanel > img {
-  width: 30vw;
+  max-width: 100%;
+  width: 28vw;
+  min-width: 280px;
   height: auto;
-  border-radius: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  animation: nx-float 7s ease-in-out infinite;
+}
+
+/* ============================================================
+   History
+   ============================================================ */
+.nx-history {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 500px at 10% -10%, rgba(124, 92, 255, 0.18), transparent 60%),
+    linear-gradient(160deg, var(--bg-900), var(--bg-800) 60%, var(--bg-700));
+  color: var(--text);
+  padding-bottom: 3rem;
+}
+
+.nx-history-header {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.6rem 2rem;
+}
+
+.nx-history-header .nx-icon-btn {
+  color: var(--text) !important;
+  background: var(--surface);
+}
+
+.nx-history-header h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.nx-history-grid {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.nx-history-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius) !important;
+  backdrop-filter: blur(12px);
+  color: var(--text) !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.nx-history-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--accent), var(--violet));
+}
+
+.nx-history-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong) !important;
+  box-shadow: var(--shadow-lg);
+}
+
+.nx-history-code {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  letter-spacing: 0.02em;
+}
+
+.nx-history-date {
+  color: var(--text-faint) !important;
+  font-size: 0.85rem !important;
+}
+
+.nx-empty {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 4rem auto;
+  text-align: center;
+  color: var(--text-dim);
+}
+
+.nx-empty h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+/* ============================================================
+   Authentication
+   ============================================================ */
+.nx-auth {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(160deg, var(--bg-900), var(--bg-800) 60%, var(--bg-700));
+  color: var(--text);
+}
+
+.nx-auth-aside {
+  flex: 1.05;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background:
+    radial-gradient(700px 500px at 20% 20%, rgba(124, 92, 255, 0.4), transparent 60%),
+    radial-gradient(600px 500px at 90% 90%, rgba(255, 152, 57, 0.35), transparent 60%),
+    linear-gradient(140deg, #1a1330, #2a1c12);
+}
+
+.nx-auth-aside::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(circle at 30% 40%, #000, transparent 75%);
+          mask-image: radial-gradient(circle at 30% 40%, #000, transparent 75%);
+}
+
+.nx-auth-aside-inner {
+  position: relative;
+  z-index: 2;
+  padding: 0 4rem;
+  max-width: 520px;
+  animation: nx-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.nx-auth-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 2.5rem;
+  background: linear-gradient(90deg, #fff, var(--accent));
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nx-auth-tagline {
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.2rem;
+}
+
+.nx-auth-copy {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+  max-width: 400px;
+}
+
+.nx-auth-main {
+  flex: 0.95;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.nx-auth-card {
+  width: 100%;
+  max-width: 410px;
+  padding: 2.4rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-lg);
+  animation: nx-rise 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.nx-auth-title {
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
+}
+
+.nx-auth-subtitle {
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: 1.6rem;
+}
+
+.nx-auth-toggle {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.3rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  margin-bottom: 0.4rem;
+}
+
+.nx-auth-toggle button {
+  flex: 1;
+  border: none;
+  cursor: pointer;
+  padding: 0.6rem 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nx-auth-toggle button.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-600));
+  color: #fff;
+  box-shadow: 0 8px 22px -8px var(--accent-glow);
+}
+
+.nx-auth-error {
+  color: #ff6b6b;
+  font-size: 0.88rem;
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 860px) {
+  .nx-auth-aside {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  .landingMainContainer,
+  .meetContainer {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 1.5rem;
+    gap: 2.5rem;
+  }
+  .landingMainContainer > div:nth-child(1),
+  .leftPanel {
+    max-width: 100%;
+  }
+  .nx-stats {
+    justify-content: center;
+  }
+  .landingMainContainer > div:nth-child(1) > p,
+  .leftPanel .nx-sub {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .landingPageContainer nav .navlist p {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .nx-join-row {
+    flex-direction: column;
+  }
 }

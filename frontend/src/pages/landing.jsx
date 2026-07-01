@@ -11,7 +11,7 @@ export default function LandingPage() {
         <div className='landingPageContainer'>
             <nav>
                 <div className='navHeader'>
-                    <h2>Apna Video Call</h2>
+                    <h2>NexaTalk</h2>
                 </div>
                 <div className='navlist'>
                     <p onClick={() => {
@@ -33,16 +33,32 @@ export default function LandingPage() {
 
             <div className="landingMainContainer">
                 <div>
-                    <h1><span style={{ color: "#FF9839" }}>Connect</span> with your loved Ones</h1>
+                    <span className="nx-badge"><span className="dot"></span> Crystal-clear HD video calling</span>
+                    <h1><span>Connect</span> with your loved ones</h1>
 
-                    <p>Cover a distance by Apna Video Call</p>
+                    <p>Bridge any distance with NexaTalk — secure, lightning-fast video meetings that bring people closer, wherever they are.</p>
                     <div role='button'>
-                        <Link to={"/auth"}>Get Started</Link>
+                        <Link to={"/auth"}>Get Started →</Link>
+                    </div>
+
+                    <div className="nx-stats">
+                        <div className="nx-stat">
+                            <strong>10k+</strong>
+                            <span>Meetings hosted</span>
+                        </div>
+                        <div className="nx-stat">
+                            <strong>99.9%</strong>
+                            <span>Uptime</span>
+                        </div>
+                        <div className="nx-stat">
+                            <strong>HD</strong>
+                            <span>Video & audio</span>
+                        </div>
                     </div>
                 </div>
                 <div>
 
-                    <img src="/mobile.png" alt="" />
+                    <img src="/mobile.png" alt="NexaTalk mobile app" />
 
                 </div>
             </div>

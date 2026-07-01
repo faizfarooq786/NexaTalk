@@ -3,14 +3,14 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
-import Box from '@mui/material/Box';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import HomeIcon from '@mui/icons-material/Home';
+import VideocamIcon from '@mui/icons-material/Videocam';
 
 import { IconButton } from '@mui/material';
+import "../App.css";
+
 export default function History() {
 
 
@@ -20,6 +20,7 @@ export default function History() {
 
 
     const routeTo = useNavigate();
+
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -46,42 +47,40 @@ export default function History() {
     }
 
     return (
-        <div>
+        <div className="nx-history">
 
-            <IconButton onClick={() => {
-                routeTo("/home")
-            }}>
-                <HomeIcon />
-            </IconButton >
+            <div className="nx-history-header">
+                <IconButton className="nx-icon-btn" onClick={() => { routeTo("/home") }}>
+                    <HomeIcon />
+                </IconButton>
+                <h2>Meeting History</h2>
+            </div>
+
             {
-                (meetings.length !== 0) ? meetings.map((e, i) => {
-                    return (
-
-                        <>
-
-
-                            <Card key={i} variant="outlined">
-
-
+                (meetings.length !== 0) ? (
+                    <div className="nx-history-grid">
+                        {meetings.map((e, i) => (
+                            <Card key={i} className="nx-history-card" variant="outlined">
                                 <CardContent>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                                        Code: {e.meetingCode}
+                                    <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.6rem", color: "#ff9839" }}>
+                                        <VideocamIcon fontSize="small" />
+                                        <Typography className="nx-history-code">
+                                            {e.meetingCode}
+                                        </Typography>
+                                    </div>
+                                    <Typography className="nx-history-date">
+                                        {formatDate(e.date)}
                                     </Typography>
-
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                        Date: {formatDate(e.date)}
-                                    </Typography>
-
                                 </CardContent>
-
-
                             </Card>
-
-
-                        </>
-                    )
-                }) : <></>
-
+                        ))}
+                    </div>
+                ) : (
+                    <div className="nx-empty">
+                        <h3>No meetings yet</h3>
+                        <p>Your past meetings will appear here once you start calling.</p>
+                    </div>
+                )
             }
 
         </div>

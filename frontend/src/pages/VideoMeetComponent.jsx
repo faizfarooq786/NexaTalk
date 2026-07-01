@@ -40,7 +40,7 @@ export default function VideoMeetComponent() {
 
     let [screen, setScreen] = useState();
 
-    let [showModal, setModal] = useState(true);
+    let [showModal, setModal] = useState(false);
 
     let [screenAvailable, setScreenAvailable] = useState();
 
@@ -48,7 +48,7 @@ export default function VideoMeetComponent() {
 
     let [message, setMessage] = useState("");
 
-    let [newMessages, setNewMessages] = useState(3);
+    let [newMessages, setNewMessages] = useState(0);
 
     let [askForUsername, setAskForUsername] = useState(true);
 
@@ -65,10 +65,8 @@ export default function VideoMeetComponent() {
     // }
 
     useEffect(() => {
-        console.log("HELLO")
         getPermissions();
-
-    })
+    }, [])
 
     let getDislayMedia = () => {
         if (screen) {
@@ -82,33 +80,38 @@ export default function VideoMeetComponent() {
     }
 
     const getPermissions = async () => {
+        let videoAllowed = false;
+        let audioAllowed = false;
+
+        // Probe video and audio separately, but RELEASE each probe stream
+        // immediately — otherwise the device stays busy and the combined
+        // getUserMedia below fails (NotReadableError, esp. on Windows).
         try {
-            const videoPermission = await navigator.mediaDevices.getUserMedia({ video: true });
-            if (videoPermission) {
-                setVideoAvailable(true);
-                console.log('Video permission granted');
-            } else {
-                setVideoAvailable(false);
-                console.log('Video permission denied');
-            }
+            const videoProbe = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoProbe.getTracks().forEach(track => track.stop());
+            videoAllowed = true;
+        } catch (e) {
+            console.log('Video permission denied/unavailable', e);
+        }
 
-            const audioPermission = await navigator.mediaDevices.getUserMedia({ audio: true });
-            if (audioPermission) {
-                setAudioAvailable(true);
-                console.log('Audio permission granted');
-            } else {
-                setAudioAvailable(false);
-                console.log('Audio permission denied');
-            }
+        try {
+            const audioProbe = await navigator.mediaDevices.getUserMedia({ audio: true });
+            audioProbe.getTracks().forEach(track => track.stop());
+            audioAllowed = true;
+        } catch (e) {
+            console.log('Audio permission denied/unavailable', e);
+        }
 
-            if (navigator.mediaDevices.getDisplayMedia) {
-                setScreenAvailable(true);
-            } else {
-                setScreenAvailable(false);
-            }
+        setVideoAvailable(videoAllowed);
+        setAudioAvailable(audioAllowed);
+        setScreenAvailable(!!navigator.mediaDevices.getDisplayMedia);
 
-            if (videoAvailable || audioAvailable) {
-                const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: videoAvailable, audio: audioAvailable });
+        try {
+            if (videoAllowed || audioAllowed) {
+                const userMediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: videoAllowed,
+                    audio: audioAllowed,
+                });
                 if (userMediaStream) {
                     window.localStream = userMediaStream;
                     if (localVideoref.current) {
@@ -117,7 +120,7 @@ export default function VideoMeetComponent() {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.log('Could not start preview stream', error);
         }
     };
 
@@ -192,6 +195,12 @@ export default function VideoMeetComponent() {
 
     let getUserMedia = () => {
         if ((video && videoAvailable) || (audio && audioAvailable)) {
+            // Release the existing stream first so the device isn't held open
+            // twice (causes NotReadableError on Windows).
+            try {
+                window.localStream.getTracks().forEach(track => track.stop())
+            } catch (e) { }
+
             navigator.mediaDevices.getUserMedia({ video: video, audio: audio })
                 .then(getUserMediaSuccess)
                 .then((stream) => { })
@@ -451,18 +460,61 @@ export default function VideoMeetComponent() {
 
             {askForUsername === true ?
 
-                <div>
+                <div className={styles.lobbyContainer}>
+                    <div className={styles.lobbyCard}>
 
+                        <div className={styles.lobbyBrand}>Nexa<span>Talk</span></div>
+                        <h2 className={styles.lobbyHeading}>Ready to join?</h2>
+                        <p className={styles.lobbySub}>Check your camera and enter a name before you connect.</p>
 
-                    <h2>Enter into Lobby </h2>
-                    <TextField id="outlined-basic" label="Username" value={username} onChange={e => setUsername(e.target.value)} variant="outlined" />
-                    <Button variant="contained" onClick={connect}>Connect</Button>
+                        <div className={styles.lobbyVideoWrap}>
+                            <video ref={localVideoref} autoPlay muted></video>
+                        </div>
 
+                        <div className={styles.lobbyControls}>
+                            <TextField
+                                id="outlined-basic"
+                                label="Your name"
+                                value={username}
+                                onChange={e => setUsername(e.target.value)}
+                                variant="outlined"
+                                fullWidth
+                                onKeyDown={(e) => { if (e.key === "Enter" && username.trim()) connect() }}
+                                sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                        color: "#f4f4f8",
+                                        borderRadius: "12px",
+                                        backgroundColor: "rgba(255,255,255,0.04)",
+                                        "& fieldset": { borderColor: "rgba(255,255,255,0.18)" },
+                                        "&:hover fieldset": { borderColor: "rgba(255,255,255,0.35)" },
+                                        "&.Mui-focused fieldset": { borderColor: "#ff9839" },
+                                    },
+                                    "& .MuiInputLabel-root": { color: "#a9abc4" },
+                                    "& .MuiInputLabel-root.Mui-focused": { color: "#ff9839" },
+                                }}
+                            />
+                            <Button
+                                variant="contained"
+                                onClick={connect}
+                                disabled={!username.trim()}
+                                sx={{
+                                    background: "linear-gradient(135deg, #ff9839, #f07d12)",
+                                    borderRadius: "12px",
+                                    textTransform: "none",
+                                    fontWeight: 700,
+                                    fontSize: "1rem",
+                                    px: 4,
+                                    whiteSpace: "nowrap",
+                                    boxShadow: "0 10px 30px -8px rgba(255,152,57,0.5)",
+                                    "&:hover": { background: "linear-gradient(135deg, #ffa54f, #ff8a1f)" },
+                                    "&.Mui-disabled": { background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.4)" }
+                                }}
+                            >
+                                Connect
+                            </Button>
+                        </div>
 
-                    <div>
-                        <video ref={localVideoref} autoPlay muted></video>
                     </div>
-
                 </div> :
 
 
@@ -476,22 +528,55 @@ export default function VideoMeetComponent() {
                             <div className={styles.chattingDisplay}>
 
                                 {messages.length !== 0 ? messages.map((item, index) => {
-
-                                    console.log(messages)
                                     return (
-                                        <div style={{ marginBottom: "20px" }} key={index}>
-                                            <p style={{ fontWeight: "bold" }}>{item.sender}</p>
+                                        <div key={index}>
+                                            <p>{item.sender}</p>
                                             <p>{item.data}</p>
                                         </div>
                                     )
-                                }) : <p>No Messages Yet</p>}
+                                }) : <p style={{ color: "#6e7191", textAlign: "center", marginTop: "2rem" }}>No messages yet</p>}
 
 
                             </div>
 
                             <div className={styles.chattingArea}>
-                                <TextField value={message} onChange={(e) => setMessage(e.target.value)} id="outlined-basic" label="Enter Your chat" variant="outlined" />
-                                <Button variant='contained' onClick={sendMessage}>Send</Button>
+                                <TextField
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    onKeyDown={(e) => { if (e.key === "Enter" && message.trim()) sendMessage() }}
+                                    id="chat-input"
+                                    label="Type a message"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    sx={{
+                                        "& .MuiOutlinedInput-root": {
+                                            color: "#f4f4f8",
+                                            borderRadius: "10px",
+                                            backgroundColor: "rgba(255,255,255,0.04)",
+                                            "& fieldset": { borderColor: "rgba(255,255,255,0.18)" },
+                                            "&:hover fieldset": { borderColor: "rgba(255,255,255,0.35)" },
+                                            "&.Mui-focused fieldset": { borderColor: "#ff9839" },
+                                        },
+                                        "& .MuiInputLabel-root": { color: "#a9abc4" },
+                                        "& .MuiInputLabel-root.Mui-focused": { color: "#ff9839" },
+                                    }}
+                                />
+                                <Button
+                                    variant='contained'
+                                    onClick={sendMessage}
+                                    disabled={!message.trim()}
+                                    sx={{
+                                        background: "linear-gradient(135deg, #ff9839, #f07d12)",
+                                        borderRadius: "10px",
+                                        textTransform: "none",
+                                        fontWeight: 700,
+                                        "&:hover": { background: "linear-gradient(135deg, #ffa54f, #ff8a1f)" },
+                                        "&.Mui-disabled": { background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.4)" }
+                                    }}
+                                >
+                                    Send
+                                </Button>
                             </div>
 
 
@@ -515,9 +600,10 @@ export default function VideoMeetComponent() {
                                 {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
                             </IconButton> : <></>}
 
-                        <Badge badgeContent={newMessages} max={999} color='orange'>
-                            <IconButton onClick={() => setModal(!showModal)} style={{ color: "white" }}>
-                                <ChatIcon />                        </IconButton>
+                        <Badge badgeContent={newMessages} max={999} color="error" sx={{ "& .MuiBadge-badge": { backgroundColor: "#ff9839", color: "#fff" } }}>
+                            <IconButton onClick={() => { setModal(!showModal); setNewMessages(0); }} style={{ color: "white" }}>
+                                <ChatIcon />
+                            </IconButton>
                         </Badge>
 
                     </div>
